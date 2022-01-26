@@ -13,6 +13,8 @@ public class PartitionEditor {
     private JScrollPane PianoRollExplorer;
     private JPanel PianoRoll;
     private JSlider BpmPicker;
+    private JLabel BpmValue;
+    private JPanel BPMPIckerPanel;
     private final int nRows;
     private final int nCols;
     private final Score currScore;
@@ -25,13 +27,16 @@ public class PartitionEditor {
 
         this.nRows = nRows;
         this.nCols = nCols;
-        currDuration = 4;
+        NoteDurationMenu.setSelectedItem("QUARTER");
+        currDuration = (int)Math.pow(2 , NoteDurationMenu.getSelectedIndex());
+        BpmValue.setText(String.valueOf(BpmPicker.getValue()));
 
         currScore = new Score(1000, 100, nRows, BpmPicker.getValue());
 
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        Dimension windowSize = new Dimension((int)screenSize.getWidth() / 2, (int)screenSize.getHeight() / 2);
-        rootPanel.setPreferredSize(windowSize);
+        Dimension windowSize = new Dimension((int)(screenSize.getWidth() / 2), (int)(screenSize.getHeight() / 2));
+        Dimension rootPanelSize = new Dimension((int)(screenSize.getWidth() / 1.5), (int)(screenSize.getHeight() / 1.5));
+        rootPanel.setPreferredSize(rootPanelSize);
         PianoRollExplorer.setMaximumSize(windowSize);
 
         //initializeImges();
@@ -65,12 +70,13 @@ public class PartitionEditor {
             if(!source.getValueIsAdjusting()) {
                 currScore.setBpm(source.getValue());
             }
+            BpmValue.setText(String.valueOf(source.getValue()));
         });
 
         NoteDurationMenu.addItemListener(e -> {
             if (e.getStateChange() == ItemEvent.SELECTED) {
-                currDuration = 1;
-                pianoListener.setCurrDuration(currDuration);
+                currDuration = (int)Math.pow(2 , NoteDurationMenu.getSelectedIndex());
+                pianoListener.setCurrDuration((int)Math.pow(2 , NoteDurationMenu.getSelectedIndex()));
             }
         });
 

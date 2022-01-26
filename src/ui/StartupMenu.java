@@ -30,7 +30,7 @@ public class StartupMenu {
 
         NewPiano.addActionListener(e -> {
             frame.setVisible(false);
-            java.awt.EventQueue.invokeLater(() -> new PartitionEditor( 25,12));
+            java.awt.EventQueue.invokeLater(() -> new PartitionEditor( 25,40));
             frame.dispose();
 
         });

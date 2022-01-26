@@ -62,6 +62,7 @@ public class PianoRollMouseListener extends MouseAdapter {
 
                 boolean isOverlapping = false;
 
+                //TODO filter for notes over the grid length
                 for (int i = cell.x; i < (cell.x + currDuration); i++){
                     if (notes.containsKey((i * 10000) + (nRows + 1 - cell.y))) {
                         isOverlapping = true;
