@@ -120,5 +120,9 @@
   </grid>
   <inspectionSuppressions>
     <suppress inspection="NoLabelFor" id="ff85f"/>
+    <suppress inspection="I18nForm"/>
+    <suppress inspection="MissingMnemonic"/>
+    <suppress inspection="I18nForm"/>
+    <suppress inspection="MissingMnemonic"/>
   </inspectionSuppressions>
 </form>

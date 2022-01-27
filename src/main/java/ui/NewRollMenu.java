@@ -25,8 +25,8 @@ public class NewRollMenu {
 
         name.setInputVerifier(new nameInputVerifier(name,nameErrorMessage));
         nSegments.setModel(new SpinnerNumberModel(12, 1, 60, 1));
-        topFreq.setModel(new SpinnerNumberModel(10000, 20, 20000, 1));
-        bottomFreq.setModel(new SpinnerNumberModel(20, 20, 20000, 1));
+        topFreq.setModel(new SpinnerNumberModel(4000, 20, 8000, 1));
+        bottomFreq.setModel(new SpinnerNumberModel(20, 20, 8000, 1));
 
         frame.pack();
         nameErrorMessage.setVisible(false);

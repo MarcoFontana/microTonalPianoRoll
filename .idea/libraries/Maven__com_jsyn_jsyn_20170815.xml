@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: com.jsyn:jsyn:20170815">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/jsyn/jsyn/20170815/jsyn-20170815.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/com/jsyn/jsyn/20170815/jsyn-20170815-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/jsyn/jsyn/20170815/jsyn-20170815-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

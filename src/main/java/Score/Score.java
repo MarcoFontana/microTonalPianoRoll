@@ -72,4 +72,11 @@ public class Score {
         return bottomFreq;
     }
 
+    public double getFreqStep() {
+        return freqStep;
+    }
+
+    public double getChordStart(int key) {
+        return key / 4.0 * (60.0/bpm);
+    }
 }

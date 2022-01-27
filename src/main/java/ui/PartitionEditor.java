@@ -1,6 +1,7 @@
 package ui;
 
 import Score.*;
+import audio.GeneralSynth;
 
 import javax.swing.*;
 import java.awt.*;
@@ -91,6 +92,9 @@ public class PartitionEditor {
             stopButton.setEnabled(true);
             BpmPicker.setEnabled(false);
             pianoListener.setPlaying(true);
+
+            GeneralSynth player = new GeneralSynth(currScore);
+            player.PlayScore();
         });
 
         pauseButton.addActionListener(e -> {
