@@ -40,7 +40,7 @@ public class PianoRollMouseListener extends MouseAdapter {
         Point cell = gridL.location(coordinates.x, coordinates.y);
         int[][] dims = gridL.getLayoutDimensions();
         int totHeight = PianoRoll.getHeight();
-        int topPadding = (totHeight - dims[1][1] * nRows) / 2;
+        int topPadding = (totHeight - dims[1][0] * nRows) / 2;
         if(coordinates.y <= topPadding) {
             cell.y =-1;
         }

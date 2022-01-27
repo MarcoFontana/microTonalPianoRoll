@@ -102,8 +102,9 @@ public class PartitionEditor {
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 
         double noteWidth = screenSize.getWidth() / 20;
+        double noteHeight = noteWidth / 6;
 
-        Dimension rollLength = new Dimension((int)(nCols * noteWidth), (int)(screenSize.getHeight() / 2.5));
+        Dimension rollLength = new Dimension((int)(nCols * noteWidth), (int)(nRows * noteHeight));
         //Dimension keyDim = new Dimension((int)screenSize.getWidth() / 20, (int)screenSize.getHeight() / 35);
 
         panel.setPreferredSize(rollLength);
