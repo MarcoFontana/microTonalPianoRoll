@@ -23,6 +23,7 @@ public class PianoRollMouseListener extends MouseAdapter {
         this.currScore = currScore;
         currDuration = currDur;
         notes = new LinkedHashMap<>();
+
     }
 
     public void setCurrDuration(int currDuration) {
@@ -35,10 +36,17 @@ public class PianoRollMouseListener extends MouseAdapter {
         Point coordinates = e.getPoint();
         JPanel PianoRoll = (JPanel) e.getComponent();
         GridBagLayout gridL = (GridBagLayout)PianoRoll.getLayout();
+
         Point cell = gridL.location(coordinates.x, coordinates.y);
+        int[][] dims = gridL.getLayoutDimensions();
+        int totHeight = PianoRoll.getHeight();
+        int topPadding = (totHeight - dims[1][1] * nRows) / 2;
+        if(coordinates.y <= topPadding) {
+            cell.y =-1;
+        }
 
         if(e.getButton() == MouseEvent.BUTTON1) {
-            if ((cell.x > 0 && cell.x < nCols * 4) && (cell.y > 0 && cell.y < nRows + 1)) {
+            if ((cell.x > 0 && cell.x < nCols * 4) && (cell.y >= 0 && cell.y < nRows + 1)) {
 
                 GridBagConstraints labelConstraints;
                 labelConstraints = new GridBagConstraints();
@@ -87,7 +95,7 @@ public class PianoRollMouseListener extends MouseAdapter {
     private void createLabel(Point cell, int duration, MouseAdapter mouseListener, GridBagConstraints labelConstraints, JPanel PianoRoll) {
 
         labelConstraints.gridwidth = duration;
-        Note newNote = new Note((nRows + 1 - cell.y), duration);
+        Note newNote = new Note((nRows - cell.y), duration);
 
         currScore.addNote(newNote, cell.x);
 

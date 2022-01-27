@@ -20,8 +20,8 @@ public class PartitionEditor {
     private final Score currScore;
     private int currDuration;
 
-    public PartitionEditor(int nRows, int nCols) {
-        JFrame frame=new JFrame("PartitionEditor");
+    public PartitionEditor(int nRows, int nCols, int maxFreq, int minFreq, String name) {
+        JFrame frame=new JFrame(name);
         frame.setContentPane(rootPanel);
         frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 
@@ -31,7 +31,7 @@ public class PartitionEditor {
         currDuration = (int)Math.pow(2 , NoteDurationMenu.getSelectedIndex());
         BpmValue.setText(String.valueOf(BpmPicker.getValue()));
 
-        currScore = new Score(1000, 100, nRows, BpmPicker.getValue());
+        currScore = new Score(maxFreq, minFreq, nRows, BpmPicker.getValue());
 
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         Dimension windowSize = new Dimension((int)(screenSize.getWidth() / 2), (int)(screenSize.getHeight() / 2));
@@ -113,28 +113,42 @@ public class PartitionEditor {
 
         cellConstraints.weightx = 4;
         cellConstraints.weighty = 1;
-        cellConstraints.fill =  GridBagConstraints.BOTH;
+        //cellConstraints.fill =  GridBagConstraints.HORIZONTAL;
 
         //JLabel[][] gridSegments = new JLabel[nRows][nCols];
 
         cellConstraints.gridx = 0;
-        for (int row = 1; row <= nRows; row++) {
+        /*cellConstraints.gridy = 0;
+        JLabel segs = new JLabel();
+        segs.setOpaque(true);
+        segs.setBackground(Color.green);
+        segs.setPreferredSize(new Dimension(1, 3));
+        panel.add(segs, cellConstraints);*/
+        cellConstraints.gridheight = 1;
+        cellConstraints.gridy = 0;
+        for (int col = 1; col < nCols*segments; col++) {
+
+            JSeparator seg = new JSeparator();
+            //seg.setOpaque(true);
+            cellConstraints.gridx = col;
+            //seg.setBackground(Color.green);
+            //seg.setMaximumSize(new Dimension(1, 3));
+            panel.add(seg, cellConstraints);
+
+        }
+        cellConstraints.gridx = 0;
+        cellConstraints.fill =  GridBagConstraints.BOTH;
+        for (int row = 0; row < nRows; row++) {
             JLabel seg = new JLabel();
+            //cellConstraints.gridheight = 4;
             seg.setBorder(BorderFactory.createLineBorder(Color.red));
             seg.setOpaque(true);
             cellConstraints.gridy = row;
             panel.add(seg,cellConstraints);
         }
-        cellConstraints.gridy = 0;
-        for (int col = 0; col < nCols*segments; col++) {
 
-            JLabel seg = new JLabel();
-            seg.setOpaque(true);
-            cellConstraints.gridx = col;
+        //cellConstraints.fill =  GridBagConstraints.HORIZONTAL;
 
-            panel.add(seg, cellConstraints);
-
-        }
 
         /*for (int row = 0; row < gridSegments.length; row++) {
             cellConstraints.gridy = row;
