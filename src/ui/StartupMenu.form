@@ -6,7 +6,7 @@
       <xy x="116" y="4" width="404" height="416"/>
     </constraints>
     <properties>
-      <toolTipText value="Load a project"/>
+      <toolTipText value=""/>
     </properties>
     <border type="none"/>
     <children>

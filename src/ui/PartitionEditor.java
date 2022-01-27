@@ -14,7 +14,9 @@ public class PartitionEditor {
     private JPanel PianoRoll;
     private JSlider BpmPicker;
     private JLabel BpmValue;
-    private JPanel BPMPIckerPanel;
+    private JButton playButton;
+    private JButton pauseButton;
+    private JButton stopButton;
     private final int nRows;
     private final int nCols;
     private final Score currScore;
@@ -40,6 +42,7 @@ public class PartitionEditor {
         PianoRollExplorer.setMaximumSize(windowSize);
 
         //initializeImges();
+        //playButton.setIcon(new ImageIcon("img/play-button.png"));
 
         createGrid(PianoRoll);
 
@@ -82,9 +85,32 @@ public class PartitionEditor {
 
         PianoRoll.addMouseListener(pianoListener);
 
+        playButton.addActionListener(e -> {
+            playButton.setEnabled(false);
+            pauseButton.setEnabled(true);
+            stopButton.setEnabled(true);
+            BpmPicker.setEnabled(false);
+            pianoListener.setPlaying(true);
+        });
+
+        pauseButton.addActionListener(e -> {
+            playButton.setEnabled(true);
+            pauseButton.setEnabled(false);
+            stopButton.setEnabled(true);
+        });
+
+        stopButton.addActionListener(e -> {
+            playButton.setEnabled(true);
+            pauseButton.setEnabled(false);
+            stopButton.setEnabled(false);
+            BpmPicker.setEnabled(true);
+            pianoListener.setPlaying(false);
+        });
+
+
     }
 
-    /*private void initializeImges() {
+     /*private void initializeImges() {
 
         noteImg = null;
         try {
