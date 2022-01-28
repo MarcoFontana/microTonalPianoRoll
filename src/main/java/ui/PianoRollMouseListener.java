@@ -75,7 +75,7 @@ public class PianoRollMouseListener extends MouseAdapter {
 
                     //TODO filter for notes over the grid length
                     for (int i = cell.x; i < (cell.x + currDuration); i++) {
-                        if (notes.containsKey((i * 10000) + (nRows + 1 - cell.y))) {
+                        if (notes.containsKey((i * 10000) + (nRows - cell.y))) {
                             isOverlapping = true;
 
                             createLabel(cell, i - cell.x, mouseListener, labelConstraints, PianoRoll);
@@ -114,7 +114,7 @@ public class PianoRollMouseListener extends MouseAdapter {
         //seg.setOpaque(true);
         seg.addMouseListener(mouseListener);
         PianoRoll.add(seg, labelConstraints);
-        notes.put((cell.x * 10000) + (nRows + 1 - cell.y), seg);
+        notes.put((cell.x * 10000) + (nRows - cell.y), seg);
         PianoRoll.revalidate();
         PianoRoll.repaint();
 

@@ -22,12 +22,15 @@ public class PartitionEditor {
     private final int nCols;
     private final Score currScore;
     private int currDuration;
+    private GeneralSynth player;
+    private boolean isPaused;
 
     public PartitionEditor(int nRows, int nCols, int maxFreq, int minFreq, String name) {
         JFrame frame=new JFrame(name);
         frame.setContentPane(rootPanel);
         frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 
+        isPaused = false;
         this.nRows = nRows;
         this.nCols = nCols;
         NoteDurationMenu.setSelectedItem("QUARTER");
@@ -93,14 +96,23 @@ public class PartitionEditor {
             BpmPicker.setEnabled(false);
             pianoListener.setPlaying(true);
 
-            GeneralSynth player = new GeneralSynth(currScore);
+            if (!isPaused){
+                player = new GeneralSynth(currScore);
+            }
+            else {
+                isPaused = false;
+            }
             player.PlayScore();
+
         });
 
         pauseButton.addActionListener(e -> {
             playButton.setEnabled(true);
             pauseButton.setEnabled(false);
             stopButton.setEnabled(true);
+
+            player.stop();
+            isPaused = true;
         });
 
         stopButton.addActionListener(e -> {
@@ -109,6 +121,10 @@ public class PartitionEditor {
             stopButton.setEnabled(false);
             BpmPicker.setEnabled(true);
             pianoListener.setPlaying(false);
+
+            player.stop();
+            player = null;
+            isPaused = false;
         });
 
 

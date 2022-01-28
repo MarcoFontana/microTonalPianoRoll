@@ -23,23 +23,24 @@ public class Score {
         this.bpm = bpm;
     }
 
-    public void addNote(Note note, Integer startBlock) {
+    public void addNote(Note note, int startBlock) {
 
-        if (score.containsKey(startBlock)) {
-            score.get(startBlock).addNote(note);
+        int key = startBlock - 1;
+        if (score.containsKey(key)) {
+            score.get(key).addNote(note);
         }
         else {
-            score.put(startBlock, new Chord(note));
+            score.put(key, new Chord(note));
         }
 
     }
 
-    public void deleteNote(Note note, Integer startBlock) {
-
-        if (score.containsKey(startBlock)) {
-            score.get(startBlock).deleteNote(note);
-            if(score.get(startBlock).isEmpty()) {
-                score.remove(startBlock);
+    public void deleteNote(Note note, int startBlock) {
+        int key = startBlock - 1;
+        if (score.containsKey(key)) {
+            score.get(key).deleteNote(note);
+            if(score.get(key).isEmpty()) {
+                score.remove(key);
             }
         }
     }
@@ -78,5 +79,9 @@ public class Score {
 
     public double getChordStart(int key) {
         return key / 4.0 * (60.0/bpm);
+    }
+
+    public int length() {
+        return score.lastKey();
     }
 }
