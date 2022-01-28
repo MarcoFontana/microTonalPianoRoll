@@ -34,7 +34,7 @@ public class GeneralSynth {
         initSynth();
     }
 
-    public void PlayScore() {
+    public double PlayScore() {
 
         synth.start();
         int nextIndex = 0;
@@ -47,17 +47,19 @@ public class GeneralSynth {
 
         out.start(startTime);
 
+        double stopTime = 0;
+
         try {
-            queueScore(timeNow + 0.1, nextIndex);
+            stopTime = queueScore(timeNow + 0.1, nextIndex);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
 
-        stop();
+        return stopTime;
 
     }
 
-    private void queueScore(double timeNow, int startIndex) throws InterruptedException {
+    private double queueScore(double timeNow, int startIndex) throws InterruptedException {
 
         TreeMap<Integer, Chord> scoreTree = scoreToPlay.getScore();
         double currPlayTime = 0;
@@ -94,8 +96,23 @@ public class GeneralSynth {
 
         }
 
-        synth.sleepUntil(currPlayTime + timeNow);
+        //synth.sleepUntil(currPlayTime + timeNow);
+        return currPlayTime + timeNow;
 
+    }
+
+    public boolean stopAt(double stopTime) {
+        boolean naturalFinish = false;
+
+        while (true) {
+            if (!synth.isRunning() || (!(synth.getCurrentTime() < stopTime))) break;
+        }
+        if (synth.isRunning()) {
+            stop();
+            naturalFinish = true;
+        }
+
+        return naturalFinish;
     }
 
     public void stop() {

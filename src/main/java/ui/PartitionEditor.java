@@ -91,40 +91,133 @@ public class PartitionEditor {
 
         playButton.addActionListener(e -> {
             playButton.setEnabled(false);
-            pauseButton.setEnabled(true);
-            stopButton.setEnabled(true);
             BpmPicker.setEnabled(false);
             pianoListener.setPlaying(true);
 
-            if (!isPaused){
-                player = new GeneralSynth(currScore);
-            }
-            else {
-                isPaused = false;
-            }
-            player.PlayScore();
+            SwingWorker<Integer, String> playScore = new SwingWorker<>() {
+                @Override
+                protected Integer doInBackground() {
+
+                    if (!isPaused){
+                        player = new GeneralSynth(currScore);
+                    }
+                    else {
+                        isPaused = false;
+                    }
+
+                    System.out.println("play");
+
+                    setProgress(1);
+
+                    double stopTime = player.PlayScore();
+
+                    SwingWorker<Integer, String> playStatusHandler = new SwingWorker<>() {
+
+                        private boolean naturalFinish;
+                        @Override
+                        protected Integer doInBackground() {
+
+                            System.out.println("waiting");
+
+                            naturalFinish = player.stopAt(stopTime);
+
+                            return 1;
+                        }
+
+                        @Override
+                        protected void done() {
+                            System.out.println("waitingDone");
+                            if (naturalFinish) {
+                                pauseButton.setEnabled(false);
+                                stopButton.setEnabled(false);
+                                player = null;
+                                isPaused = false;
+                                playButton.setEnabled(true);
+                                BpmPicker.setEnabled(true);
+                                pianoListener.setPlaying(false);
+                            }
+                            super.done();
+                        }
+                    };
+
+                    playStatusHandler.execute();
+
+
+
+                    return 1;
+                }
+
+                @Override
+                protected void done() {
+                    System.out.println("playDone");
+                    pauseButton.setEnabled(true);
+                    stopButton.setEnabled(true);
+                    super.done();
+                }
+            };
+
+            playScore.execute();
 
         });
 
         pauseButton.addActionListener(e -> {
-            playButton.setEnabled(true);
-            pauseButton.setEnabled(false);
-            stopButton.setEnabled(true);
 
-            player.stop();
-            isPaused = true;
+            pauseButton.setEnabled(false);
+
+            SwingWorker<Integer, String> pauseScore = new SwingWorker<>() {
+                @Override
+                protected Integer doInBackground() {
+
+                    player.stop();
+                    isPaused = true;
+                    System.out.println("pause");
+
+                    return 1;
+                }
+
+                @Override
+                protected void done() {
+                    playButton.setEnabled(true);
+                    stopButton.setEnabled(true);
+                    System.out.println("pause Done");
+                    super.done();
+                }
+            };
+
+            pauseScore.execute();
+
         });
 
         stopButton.addActionListener(e -> {
-            playButton.setEnabled(true);
             pauseButton.setEnabled(false);
             stopButton.setEnabled(false);
-            BpmPicker.setEnabled(true);
-            pianoListener.setPlaying(false);
 
-            player.stop();
-            player = null;
-            isPaused = false;
+            SwingWorker<Integer, String> stopScore = new SwingWorker<>() {
+                @Override
+                protected Integer doInBackground() {
+
+                    if (!isPaused){
+                        player.stop();
+                    }
+                    player = null;
+                    isPaused = false;
+                    //playScore.cancel(true);
+                    return 1;
+                }
+
+                @Override
+                protected void done() {
+
+                    System.out.println("stop");
+                    playButton.setEnabled(true);
+                    BpmPicker.setEnabled(true);
+                    pianoListener.setPlaying(false);
+                    super.done();
+                }
+            };
+
+            stopScore.execute();
+
         });
 
 
