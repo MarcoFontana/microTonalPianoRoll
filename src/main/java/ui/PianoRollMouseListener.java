@@ -37,7 +37,7 @@ public class PianoRollMouseListener extends MouseAdapter {
 
         if (!isPlaying){
             Point coordinates = e.getPoint();
-            JPanel PianoRoll = (JPanel) e.getComponent();
+            JLayeredPane PianoRoll = (JLayeredPane) e.getComponent();
             GridBagLayout gridL = (GridBagLayout) PianoRoll.getLayout();
 
             Point cell = gridL.location(coordinates.x, coordinates.y);
@@ -96,7 +96,7 @@ public class PianoRollMouseListener extends MouseAdapter {
 
     }
 
-    private void createLabel(Point cell, int duration, MouseAdapter mouseListener, GridBagConstraints labelConstraints, JPanel PianoRoll) {
+    private void createLabel(Point cell, int duration, MouseAdapter mouseListener, GridBagConstraints labelConstraints, JLayeredPane PianoRoll) {
 
         labelConstraints.gridwidth = duration;
         Note newNote = new Note((nRows - cell.y), duration);
@@ -113,7 +113,7 @@ public class PianoRollMouseListener extends MouseAdapter {
         //seg.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED, Color.green, Color.white));
         //seg.setOpaque(true);
         seg.addMouseListener(mouseListener);
-        PianoRoll.add(seg, labelConstraints);
+        PianoRoll.add(seg, labelConstraints, 1);
         notes.put((cell.x * 10000) + (nRows - cell.y), seg);
         PianoRoll.revalidate();
         PianoRoll.repaint();

@@ -12,7 +12,7 @@ public class PartitionEditor {
     private JPanel rootPanel;
     private JComboBox<String> NoteDurationMenu;
     private JScrollPane PianoRollExplorer;
-    private JPanel PianoRoll;
+    private final JLayeredPane PianoRoll;
     private JSlider BpmPicker;
     private JLabel BpmValue;
     private JButton playButton;
@@ -48,6 +48,9 @@ public class PartitionEditor {
         //initializeImges();
         //playButton.setIcon(new ImageIcon("img/play-button.png"));
 
+        PianoRoll = new JLayeredPane();
+        PianoRoll.setLayout(new GridBagLayout());
+        PianoRollExplorer.setViewportView(PianoRoll);
         createGrid(PianoRoll);
 
         eventHandlersInitialize(frame);
@@ -89,6 +92,7 @@ public class PartitionEditor {
 
         PianoRoll.addMouseListener(pianoListener);
 
+        //TODO can't play when score empty
         playButton.addActionListener(e -> {
             playButton.setEnabled(false);
             BpmPicker.setEnabled(false);
@@ -234,7 +238,7 @@ public class PartitionEditor {
 
     }*/
 
-    private void createGrid(JPanel panel) {
+    private void createGrid(JLayeredPane panel) {
 
         int segments = 4;
 
@@ -273,7 +277,7 @@ public class PartitionEditor {
             cellConstraints.gridx = col;
             //seg.setBackground(Color.green);
             //seg.setMaximumSize(new Dimension(1, 3));
-            panel.add(seg, cellConstraints);
+            panel.add(seg, cellConstraints, 1);
 
         }
         cellConstraints.gridx = 0;
@@ -284,7 +288,17 @@ public class PartitionEditor {
             seg.setBorder(BorderFactory.createLineBorder(Color.red));
             seg.setOpaque(true);
             cellConstraints.gridy = row;
-            panel.add(seg,cellConstraints);
+            panel.add(seg,cellConstraints, 1);
+        }
+
+        cellConstraints.gridx = 1;
+        cellConstraints.gridwidth = (nCols*segments) - 2;
+        for (int row = 0; row < nRows; row++) {
+            GridLabels backgroundLabel = new GridLabels(cellConstraints.gridwidth, row % 2 == 0);
+            //cellConstraints.gridheight = 4;
+            //backgroundLabel.setBackground(Color.CYAN);
+            cellConstraints.gridy = row;
+            panel.add(backgroundLabel,cellConstraints, 1);
         }
 
         //cellConstraints.fill =  GridBagConstraints.HORIZONTAL;
