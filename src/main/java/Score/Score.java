@@ -1,5 +1,6 @@
 package Score;
 
+import java.util.NoSuchElementException;
 import java.util.TreeMap;
 
 public class Score {
@@ -92,7 +93,15 @@ public class Score {
     }
 
     public int length() {
-        return score.lastKey();
+
+        Integer integer;
+
+        try{
+            integer = score.lastKey();
+        }catch (NoSuchElementException e) {
+            integer = -1;
+        }
+        return integer;
     }
 
     public int getnSteps() {

@@ -132,6 +132,7 @@ public class GeneralSynth {
         for (int i = 0; i < MAX_VOICES; i++) {
 
             UnitVoice voice;
+            //TODO more instruments
             switch (selectedInstrument) {
                 case "sawWave": {
                     voice = new SubSynth();

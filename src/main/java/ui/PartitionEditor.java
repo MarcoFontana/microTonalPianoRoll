@@ -153,77 +153,77 @@ public class PartitionEditor {
 
         PianoRoll.addMouseListener(pianoListener);
 
-        //TODO can't play when score empty
         playButton.addActionListener(e -> {
-            playButton.setEnabled(false);
-            BpmPicker.setEnabled(false);
-            pianoListener.setPlaying(true);
-            saveButton.setEnabled(false);
+            if (currScore.length() >= 0){
+                playButton.setEnabled(false);
+                BpmPicker.setEnabled(false);
+                pianoListener.setPlaying(true);
+                saveButton.setEnabled(false);
 
-            SwingWorker<Integer, String> playScore = new SwingWorker<>() {
-                @Override
-                protected Integer doInBackground() {
+                SwingWorker<Integer, String> playScore = new SwingWorker<>() {
+                    @Override
+                    protected Integer doInBackground() {
 
-                    if (!isPaused){
-                        player = new GeneralSynth(currScore, (String) instrumentBox.getSelectedItem());
-                    }
-                    else {
-                        isPaused = false;
-                    }
-
-                    System.out.println("play");
-
-                    setProgress(1);
-
-                    double stopTime = player.PlayScore();
-
-                    SwingWorker<Integer, String> playStatusHandler = new SwingWorker<>() {
-
-                        private boolean naturalFinish;
-                        @Override
-                        protected Integer doInBackground() {
-
-                            System.out.println("waiting");
-
-                            naturalFinish = player.stopAt(stopTime);
-
-                            return 1;
+                        if (!isPaused) {
+                            player = new GeneralSynth(currScore, (String) instrumentBox.getSelectedItem());
+                        } else {
+                            isPaused = false;
                         }
 
-                        @Override
-                        protected void done() {
-                            System.out.println("waitingDone");
-                            if (naturalFinish) {
-                                pauseButton.setEnabled(false);
-                                stopButton.setEnabled(false);
-                                player = null;
-                                isPaused = false;
-                                playButton.setEnabled(true);
-                                BpmPicker.setEnabled(true);
-                                pianoListener.setPlaying(false);
-                                saveButton.setEnabled(true);
+                        System.out.println("play");
+
+                        setProgress(1);
+
+                        double stopTime = player.PlayScore();
+
+                        SwingWorker<Integer, String> playStatusHandler = new SwingWorker<>() {
+
+                            private boolean naturalFinish;
+
+                            @Override
+                            protected Integer doInBackground() {
+
+                                System.out.println("waiting");
+
+                                naturalFinish = player.stopAt(stopTime);
+
+                                return 1;
                             }
-                            super.done();
-                        }
-                    };
 
-                    playStatusHandler.execute();
+                            @Override
+                            protected void done() {
+                                System.out.println("waitingDone");
+                                if (naturalFinish) {
+                                    pauseButton.setEnabled(false);
+                                    stopButton.setEnabled(false);
+                                    player = null;
+                                    isPaused = false;
+                                    playButton.setEnabled(true);
+                                    BpmPicker.setEnabled(true);
+                                    pianoListener.setPlaying(false);
+                                    saveButton.setEnabled(true);
+                                }
+                                super.done();
+                            }
+                        };
+
+                        playStatusHandler.execute();
 
 
+                        return 1;
+                    }
 
-                    return 1;
-                }
+                    @Override
+                    protected void done() {
+                        System.out.println("playDone");
+                        pauseButton.setEnabled(true);
+                        stopButton.setEnabled(true);
+                        super.done();
+                    }
+                };
 
-                @Override
-                protected void done() {
-                    System.out.println("playDone");
-                    pauseButton.setEnabled(true);
-                    stopButton.setEnabled(true);
-                    super.done();
-                }
-            };
-
-            playScore.execute();
+                playScore.execute();
+            }
 
         });
 
@@ -360,7 +360,7 @@ public class PartitionEditor {
         }
 
         cellConstraints.gridx = 1;
-        cellConstraints.gridwidth = (nCols*segments) - 2;
+        cellConstraints.gridwidth = (nCols*segments) - 1;
         for (int row = 0; row < nRows; row++) {
             GridLabels backgroundLabel = new GridLabels(cellConstraints.gridwidth, row % 2 == 0);
             cellConstraints.gridy = row;
