@@ -10,8 +10,6 @@ public class GridLabels extends JLabel {
 
     public GridLabels(int nCells, boolean even) {
         super();
-
-        //setBackground(Color.GRAY);
         this.nCells = nCells;
         this.even = even;
     }
@@ -22,21 +20,27 @@ public class GridLabels extends JLabel {
 
         int w = getWidth();
         int h = getHeight();
-        Color color1;
+        Color backgroundColor;
         if (even){
-            color1 = UIManager.getColor ( "Panel.background" );
+            backgroundColor = UIManager.getColor ( "Panel.background" );
         }
         else {
-            color1 = new Color(195, 195, 203);
+            backgroundColor = new Color(195, 195, 203);
         }
-        g2d.setPaint(color1);
+        g2d.setPaint(backgroundColor);
         g2d.fillRect(0, 0, w, h);
 
         g2d.setColor(Color.BLACK);
-        Stroke dashed = new BasicStroke(1, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL);
-        g2d.setStroke(dashed);
+        Stroke stroke = new BasicStroke(1, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL);
+        Stroke baldStroke = new BasicStroke(2, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL);
         int cellLength = w /nCells;
         for (int i = 1; i <= nCells; i++){
+            if (i % 4 > 0){
+                g2d.setStroke(stroke);
+            }
+            else {
+                g2d.setStroke(baldStroke);
+            }
             g2d.drawLine((cellLength * i), h, (cellLength * i), 0);
         }
         g2d.drawLine(0, 0, w,0);

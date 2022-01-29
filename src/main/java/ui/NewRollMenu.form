@@ -21,7 +21,7 @@
         <properties>
           <enabled value="true"/>
           <labelFor value="73d00"/>
-          <text value="Min frequency(20Hz-20KHz)"/>
+          <text value="Min frequency(20Hz-10KHz)"/>
         </properties>
       </component>
       <component id="afd5a" class="javax.swing.JTextField" binding="name">
@@ -55,7 +55,7 @@
         </constraints>
         <properties>
           <labelFor value="8b2df"/>
-          <text value="Max frequency(20Hz-20KHz)"/>
+          <text value="Max frequency(20Hz-10KHz)"/>
         </properties>
       </component>
       <component id="452f3" class="javax.swing.JSpinner" binding="nSegments">

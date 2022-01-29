@@ -10,7 +10,7 @@ public class StartupMenu {
 
     public StartupMenu() {
 
-        JFrame frame = new JFrame("StartupMenu");
+        JFrame frame = new JFrame("Microtonal Piano Roll");
 
         frame.setContentPane(rootPanel);
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);

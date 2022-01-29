@@ -24,8 +24,8 @@ public class Note {
         return relativeDuration / 4.0 * (60.0/bpm);
     }
 
-    public double getPitch(double freqStep) {
-        return freqStep * relativePitch;
+    public double getPitch(double freqStep, int minFreq) {
+        return minFreq + (freqStep * (relativePitch - 1));
     }
 
     @Override

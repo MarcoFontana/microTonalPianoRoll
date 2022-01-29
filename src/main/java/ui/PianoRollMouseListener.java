@@ -108,8 +108,8 @@ public class PianoRollMouseListener extends MouseAdapter {
                     /*Image noteIcon = noteImg.getScaledInstance(dims[0][1], dims[1][1],
                             Image.SCALE_SMOOTH);
                     seg.setIcon(new ImageIcon(noteIcon));*/
-        seg.setBackground(Color.blue);
-        seg.setOpaque(true);
+        //seg.setBackground(Color.blue);
+        //seg.setOpaque(true);
         //seg.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED, Color.green, Color.white));
         //seg.setOpaque(true);
         seg.addMouseListener(mouseListener);

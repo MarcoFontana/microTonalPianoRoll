@@ -18,12 +18,18 @@ public class PartitionEditor {
     private JButton playButton;
     private JButton pauseButton;
     private JButton stopButton;
+    private JComboBox<String> instrumentBox;
+    private JPanel bpmPanel;
+    private JPanel playPanel;
+    private JButton saveButton;
     private final int nRows;
     private final int nCols;
     private final Score currScore;
     private int currDuration;
     private GeneralSynth player;
     private boolean isPaused;
+    private final int minFreq;
+    private final int maxFreq;
 
     public PartitionEditor(int nRows, int nCols, int maxFreq, int minFreq, String name) {
         JFrame frame=new JFrame(name);
@@ -37,6 +43,8 @@ public class PartitionEditor {
         currDuration = (int)Math.pow(2 , NoteDurationMenu.getSelectedIndex());
         BpmValue.setText(String.valueOf(BpmPicker.getValue()));
 
+        this.minFreq = minFreq;
+        this.maxFreq = maxFreq;
         currScore = new Score(maxFreq, minFreq, nRows, BpmPicker.getValue());
 
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -52,6 +60,9 @@ public class PartitionEditor {
         PianoRoll.setLayout(new GridBagLayout());
         PianoRollExplorer.setViewportView(PianoRoll);
         createGrid(PianoRoll);
+
+        AllFrames.noDoubleClicks(new JButton[]{playButton, pauseButton, stopButton, saveButton});
+
 
         eventHandlersInitialize(frame);
         frame.pack();
@@ -103,7 +114,7 @@ public class PartitionEditor {
                 protected Integer doInBackground() {
 
                     if (!isPaused){
-                        player = new GeneralSynth(currScore);
+                        player = new GeneralSynth(currScore, (String) instrumentBox.getSelectedItem());
                     }
                     else {
                         isPaused = false;
@@ -241,13 +252,14 @@ public class PartitionEditor {
     private void createGrid(JLayeredPane panel) {
 
         int segments = 4;
+        double freqStep = (double) (maxFreq - minFreq) / (nRows - 1);
 
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 
         double noteWidth = screenSize.getWidth() / 20;
         double noteHeight = noteWidth / 6;
 
-        Dimension rollLength = new Dimension((int)(nCols * noteWidth), (int)(nRows * noteHeight));
+        Dimension rollLength = new Dimension((int)((nCols * noteWidth) + (noteWidth / 5)), (int)(nRows * noteHeight));
         //Dimension keyDim = new Dimension((int)screenSize.getWidth() / 20, (int)screenSize.getHeight() / 35);
 
         panel.setPreferredSize(rollLength);
@@ -285,8 +297,10 @@ public class PartitionEditor {
         for (int row = 0; row < nRows; row++) {
             JLabel seg = new JLabel();
             //cellConstraints.gridheight = 4;
+            seg.setHorizontalAlignment(SwingConstants.CENTER);
             seg.setBorder(BorderFactory.createLineBorder(Color.red));
-            seg.setOpaque(true);
+            seg.setText(String.valueOf((double) Math.round((maxFreq - (freqStep * row)) * 100) / 100));
+            //seg.setOpaque(true);
             cellConstraints.gridy = row;
             panel.add(seg,cellConstraints, 1);
         }
@@ -295,8 +309,6 @@ public class PartitionEditor {
         cellConstraints.gridwidth = (nCols*segments) - 2;
         for (int row = 0; row < nRows; row++) {
             GridLabels backgroundLabel = new GridLabels(cellConstraints.gridwidth, row % 2 == 0);
-            //cellConstraints.gridheight = 4;
-            //backgroundLabel.setBackground(Color.CYAN);
             cellConstraints.gridy = row;
             panel.add(backgroundLabel,cellConstraints, 1);
         }

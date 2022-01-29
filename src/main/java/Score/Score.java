@@ -19,7 +19,7 @@ public class Score {
         this.bottomFreq = bottomFreq;
         frequencyRange = topFreq - bottomFreq;
         nSteps = steps;
-        freqStep = (double)frequencyRange / steps;
+        freqStep = (double)frequencyRange / (steps - 1);
         this.bpm = bpm;
     }
 

@@ -1,6 +1,8 @@
 package audio;
 
 import Score.*;
+import audio.instruments.SquareTremoloInst;
+import audio.instruments.SubSynth;
 import com.jsyn.JSyn;
 import com.jsyn.Synthesizer;
 import com.jsyn.instruments.SubtractiveSynthVoice;
@@ -15,16 +17,16 @@ public class GeneralSynth {
     private static final int MAX_VOICES = 16;
     private final Score scoreToPlay;
     private Synthesizer synth;
-    private SineOscillator osc;
     private LineOut out;
     private VoiceAllocator allocator;
-    private UnitVoice[] voices;
+    private String selectedInstrument;
     private double playTime;
 
 
-    public GeneralSynth(Score scoreToPlay) {
+    public GeneralSynth(Score scoreToPlay, String selectedInstrument) {
         this.scoreToPlay = scoreToPlay;
         this.playTime = 0;
+        this.selectedInstrument = selectedInstrument;
         initSynth();
     }
 
@@ -74,7 +76,7 @@ public class GeneralSynth {
 
                 for (Note note : chord.getChord()) {
 
-                    double freq = note.getPitch(scoreToPlay.getFreqStep());
+                    double freq = note.getPitch(scoreToPlay.getFreqStep(), scoreToPlay.getBottomFreq());
                     double duration;
 
                     if (sTime < 0){
@@ -96,7 +98,6 @@ public class GeneralSynth {
 
         }
 
-        //synth.sleepUntil(currPlayTime + timeNow);
         return currPlayTime + timeNow;
 
     }
@@ -124,14 +125,29 @@ public class GeneralSynth {
     private void initSynth() {
 
         synth = JSyn.createSynthesizer();
-        voices = new UnitVoice[MAX_VOICES];
+        UnitVoice[] voices = new UnitVoice[MAX_VOICES];
 
-        synth.add(osc = new SineOscillator());
         synth.add(out = new LineOut());
 
         for (int i = 0; i < MAX_VOICES; i++) {
-            SubtractiveSynthVoice voice = new SubtractiveSynthVoice();
-            synth.add(voice);
+
+            UnitVoice voice;
+            switch (selectedInstrument) {
+                case "sawWave": {
+                    voice = new SubSynth();
+                    break;
+                }
+                case "squareWave": {
+                    voice = new SquareTremoloInst();
+                    break;
+                }
+                default:{
+                    voice = new SubtractiveSynthVoice();
+                    break;
+                }
+
+            }
+            synth.add((UnitGenerator) voice);
             voice.getOutput().connect(0, out.input, 0);
             voice.getOutput().connect(0, out.input, 1);
             voices[i] = voice;
