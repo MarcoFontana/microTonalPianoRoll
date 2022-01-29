@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class Chord {
 
-    private final ArrayList<Note> chord;
+    private ArrayList<Note> chord;
 
     public Chord() {
         chord = new ArrayList<>();
@@ -35,4 +35,7 @@ public class Chord {
         return getChord().isEmpty();
     }
 
+    public void setChord(ArrayList<Note> chord) {
+        this.chord = chord;
+    }
 }

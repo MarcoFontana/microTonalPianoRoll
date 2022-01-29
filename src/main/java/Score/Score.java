@@ -4,12 +4,12 @@ import java.util.TreeMap;
 
 public class Score {
 
-    private final TreeMap<Integer, Chord> score;
-    private final int topFreq;
-    private final int bottomFreq;
-    private final int frequencyRange;
-    private final int nSteps;
-    private final double freqStep;
+    private TreeMap<Integer, Chord> score;
+    private int topFreq;
+    private int bottomFreq;
+    private int frequencyRange;
+    private int nSteps;
+    private double freqStep;
     private int bpm;
 
     public Score(int topFreq, int bottomFreq, int steps, int bpm) {
@@ -21,6 +21,16 @@ public class Score {
         nSteps = steps;
         freqStep = (double)frequencyRange / (steps - 1);
         this.bpm = bpm;
+    }
+
+    public Score() {
+        score = new TreeMap<>();
+        topFreq = 10000;
+        bottomFreq = 20;
+        frequencyRange = topFreq - bottomFreq;
+        nSteps = 12;
+        freqStep = (double)frequencyRange / (nSteps - 1);
+        this.bpm = 120;
     }
 
     public void addNote(Note note, int startBlock) {
@@ -84,4 +94,33 @@ public class Score {
     public int length() {
         return score.lastKey();
     }
+
+    public int getnSteps() {
+        return nSteps;
+    }
+
+    public void setBottomFreq(int bottomFreq) {
+        this.bottomFreq = bottomFreq;
+    }
+
+    public void setFreqStep(double freqStep) {
+        this.freqStep = freqStep;
+    }
+
+    public void setScore(TreeMap<Integer, Chord> score) {
+        this.score = score;
+    }
+
+    public void setnSteps(int nSteps) {
+        this.nSteps = nSteps;
+    }
+
+    public void setFrequencyRange(int frequencyRange) {
+        this.frequencyRange = frequencyRange;
+    }
+
+    public void setTopFreq(int topFreq) {
+        this.topFreq = topFreq;
+    }
+
 }

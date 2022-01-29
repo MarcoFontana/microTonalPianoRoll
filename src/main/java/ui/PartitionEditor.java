@@ -6,6 +6,8 @@ import audio.GeneralSynth;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.Map;
+import java.util.TreeMap;
 
 public class PartitionEditor {
 
@@ -30,9 +32,56 @@ public class PartitionEditor {
     private boolean isPaused;
     private final int minFreq;
     private final int maxFreq;
+    private final String name;
+
+    public  PartitionEditor(Score score, String name) {
+
+        JFrame frame=new JFrame(name);
+        this.name = name;
+        frame.setContentPane(rootPanel);
+        frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+
+        isPaused = false;
+        nRows = score.getnSteps();
+        nCols = 40;
+
+        NoteDurationMenu.setSelectedItem("QUARTER");
+        currDuration = (int)Math.pow(2 , NoteDurationMenu.getSelectedIndex());
+        BpmPicker.setValue(score.getBpm());
+        BpmValue.setText(String.valueOf(BpmPicker.getValue()));
+
+        minFreq = score.getBottomFreq();
+        maxFreq = score.getTopFreq();
+        currScore = score;
+
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        Dimension windowSize = new Dimension((int)(screenSize.getWidth() / 2), (int)(screenSize.getHeight() / 2));
+        Dimension rootPanelSize = new Dimension((int)(screenSize.getWidth() / 1.5), (int)(screenSize.getHeight() / 1.5));
+        rootPanel.setPreferredSize(rootPanelSize);
+        PianoRollExplorer.setMaximumSize(windowSize);
+
+        PianoRoll = new JLayeredPane();
+        PianoRoll.setLayout(new GridBagLayout());
+        PianoRollExplorer.setViewportView(PianoRoll);
+        createGrid(PianoRoll);
+
+        AllFrames.noDoubleClicks(new JButton[]{playButton, pauseButton, stopButton, saveButton});
+
+
+        eventHandlersInitialize(frame);
+        fillEditorFromScore();
+        setKeyBinds();
+        frame.pack();
+        //AllFrames.noDoubleClicks([]);
+        frame.setLocationRelativeTo(null);
+
+        frame.setVisible(true);
+
+    }
 
     public PartitionEditor(int nRows, int nCols, int maxFreq, int minFreq, String name) {
         JFrame frame=new JFrame(name);
+        this.name = name;
         frame.setContentPane(rootPanel);
         frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 
@@ -239,6 +288,7 @@ public class PartitionEditor {
 
         });
 
+        saveButton.addActionListener(e -> SaveScore.save(currScore, name));
 
     }
 
@@ -263,7 +313,7 @@ public class PartitionEditor {
         double noteWidth = screenSize.getWidth() / 20;
         double noteHeight = noteWidth / 6;
 
-        Dimension rollLength = new Dimension((int)((nCols * noteWidth) + (noteWidth / 5)), (int)(nRows * noteHeight));
+        Dimension rollLength = new Dimension((int)((nCols * noteWidth) + (noteWidth / 5)), (int)((nRows * noteHeight) + (noteHeight)));
         //Dimension keyDim = new Dimension((int)screenSize.getWidth() / 20, (int)screenSize.getHeight() / 35);
 
         panel.setPreferredSize(rollLength);
@@ -402,6 +452,26 @@ public class PartitionEditor {
         inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_D, 0, false), "pressed");
         inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_D, 0, true), "released");
 
+
+    }
+
+    private void fillEditorFromScore() {
+
+        TreeMap<Integer, Chord> treeScore = currScore.getScore();
+
+        for (Map.Entry<Integer, Chord> entry: treeScore.entrySet()) {
+
+            int cellX = entry.getKey() + 1;
+            Chord  chord = entry.getValue();
+
+            for (Note note : chord.getChord()) {
+                int cellY = nRows - note.getRelativePitch();
+                Point cell = new Point(cellX, cellY);
+                MouseListener[] listeners = PianoRoll.getMouseListeners();
+                ((PianoRollMouseListener)listeners[0]).loadLabel(cell, note, PianoRoll);
+            }
+
+        }
 
     }
 

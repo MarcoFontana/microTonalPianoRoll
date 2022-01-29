@@ -4,12 +4,17 @@ import java.util.Objects;
 
 public class Note {
 
-    private final int relativePitch;
-    private final int relativeDuration;
+    private int relativePitch;
+    private int relativeDuration;
 
     public Note(int relPitch, int relDur) {
         relativePitch = relPitch;
         relativeDuration = relDur;
+    }
+
+    public Note() {
+        relativePitch = -1;
+        relativeDuration = -1;
     }
 
     public int getRelativePitch() {
@@ -26,6 +31,14 @@ public class Note {
 
     public double getPitch(double freqStep, int minFreq) {
         return minFreq + (freqStep * (relativePitch - 1));
+    }
+
+    public void setRelativeDuration(int relativeDuration) {
+        this.relativeDuration = relativeDuration;
+    }
+
+    public void setRelativePitch(int relativePitch) {
+        this.relativePitch = relativePitch;
     }
 
     @Override
