@@ -65,6 +65,7 @@ public class PartitionEditor {
 
 
         eventHandlersInitialize(frame);
+        setKeyBinds();
         frame.pack();
         //AllFrames.noDoubleClicks([]);
         frame.setLocationRelativeTo(null);
@@ -108,6 +109,7 @@ public class PartitionEditor {
             playButton.setEnabled(false);
             BpmPicker.setEnabled(false);
             pianoListener.setPlaying(true);
+            saveButton.setEnabled(false);
 
             SwingWorker<Integer, String> playScore = new SwingWorker<>() {
                 @Override
@@ -150,6 +152,7 @@ public class PartitionEditor {
                                 playButton.setEnabled(true);
                                 BpmPicker.setEnabled(true);
                                 pianoListener.setPlaying(false);
+                                saveButton.setEnabled(true);
                             }
                             super.done();
                         }
@@ -227,6 +230,7 @@ public class PartitionEditor {
                     playButton.setEnabled(true);
                     BpmPicker.setEnabled(true);
                     pianoListener.setPlaying(false);
+                    saveButton.setEnabled(true);
                     super.done();
                 }
             };
@@ -328,6 +332,76 @@ public class PartitionEditor {
                 panel.add(seg,cellConstraints);
             }
         }*/
+
+    }
+
+    private void setKeyBinds() {
+
+        InputMap inputMap;
+        ActionMap actionMap;
+
+        inputMap = NoteDurationMenu.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+        actionMap = NoteDurationMenu.getActionMap();
+        inputMap.put(KeyStroke.getKeyStroke("1"), "selectWHOLE");
+        actionMap.put("selectWHOLE", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                NoteDurationMenu.setSelectedItem("WHOLE");
+            }
+        });
+
+        inputMap.put(KeyStroke.getKeyStroke("2"),
+                "selectHALF");
+        actionMap.put("selectHALF", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                NoteDurationMenu.setSelectedItem("HALF");
+            }
+        });
+
+        inputMap.put(KeyStroke.getKeyStroke("3"),
+                "selectQUARTER");
+        actionMap.put("selectQUARTER", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                NoteDurationMenu.setSelectedItem("QUARTER");
+            }
+        });
+
+        inputMap.put(KeyStroke.getKeyStroke("4"),
+                "selectEIGHTH");
+        actionMap.put("selectEIGHTH", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                NoteDurationMenu.setSelectedItem("EIGHTH");
+            }
+        });
+
+        inputMap.put(KeyStroke.getKeyStroke("5"),
+                "selectSIXTEENTH");
+        actionMap.put("selectSIXTEENTH", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                NoteDurationMenu.setSelectedItem("SIXTEENTH");
+            }
+        });
+
+        inputMap = playButton.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+
+        inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_A, 0, false), "pressed");
+        inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_A, 0, true), "released");
+
+        inputMap = pauseButton.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+
+        inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_S, 0, false), "pressed");
+        inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_S, 0, true), "released");
+
+
+        inputMap = stopButton.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+
+        inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_D, 0, false), "pressed");
+        inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_D, 0, true), "released");
+
 
     }
 
