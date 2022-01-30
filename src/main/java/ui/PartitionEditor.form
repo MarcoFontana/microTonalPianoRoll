@@ -41,6 +41,9 @@
           <model>
             <item value="sawWave"/>
             <item value="squareWave"/>
+            <item value="waveShaping"/>
+            <item value="noiseHit"/>
+            <item value="dualOscillator"/>
           </model>
         </properties>
       </component>

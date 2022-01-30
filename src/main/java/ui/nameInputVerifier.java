@@ -16,8 +16,9 @@ public class nameInputVerifier extends InputVerifier {
     @Override
     public boolean shouldYieldFocus(JComponent source, JComponent target) {
         if (!verify(source)) {
-            field.setText("NewPiano");
+            //field.setText("NewPiano");
             error.setVisible(true);
+            return false;
         }
         else {
             error.setVisible(false);

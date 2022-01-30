@@ -81,10 +81,14 @@ public class NewRollMenu {
                 freqError.setVisible(true);
             }
             else {
-                frame.setVisible(false);
-                java.awt.EventQueue.invokeLater(() -> new PartitionEditor((Integer) nSegments.getValue(), 40,
-                        (Integer) topFreq.getValue(), (Integer) bottomFreq.getValue(), name.getText()));
-                frame.dispose();
+                if (name.getInputVerifier().verify(name)) {
+
+                    frame.setVisible(false);
+                    java.awt.EventQueue.invokeLater(() -> new PartitionEditor((Integer) nSegments.getValue(), 40,
+                            (Integer) topFreq.getValue(), (Integer) bottomFreq.getValue(), name.getText()));
+                    frame.dispose();
+
+                }
             }
 
         });

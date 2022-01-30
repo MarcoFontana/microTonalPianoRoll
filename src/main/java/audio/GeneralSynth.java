@@ -5,7 +5,7 @@ import audio.instruments.SquareTremoloInst;
 import audio.instruments.SubSynth;
 import com.jsyn.JSyn;
 import com.jsyn.Synthesizer;
-import com.jsyn.instruments.SubtractiveSynthVoice;
+import com.jsyn.instruments.*;
 import com.jsyn.unitgen.*;
 import com.jsyn.util.VoiceAllocator;
 import com.softsynth.shared.time.TimeStamp;
@@ -150,7 +150,6 @@ public class GeneralSynth {
         for (int i = 0; i < MAX_VOICES; i++) {
 
             UnitVoice voice;
-            //TODO more instruments
             switch (selectedInstrument) {
                 case "sawWave": {
                     voice = new SubSynth();
@@ -158,6 +157,18 @@ public class GeneralSynth {
                 }
                 case "squareWave": {
                     voice = new SquareTremoloInst();
+                    break;
+                }
+                case "waveShaping": {
+                    voice = new WaveShapingVoice();
+                    break;
+                }
+                case "noiseHit": {
+                    voice = new NoiseHit();
+                    break;
+                }
+                case "dualOscillator": {
+                    voice = new DualOscillatorSynthVoice();
                     break;
                 }
                 default:{
@@ -171,11 +182,8 @@ public class GeneralSynth {
             voice.getOutput().connect(0, out.input, 1);
             voices[i] = voice;
         }
-        allocator = new VoiceAllocator(voices);
 
-        /*osc.output.connect(0, out.input, 0);
-        osc.output.connect(0, out.input, 1);
-        osc.amplitude.set(0);*/
+        allocator = new VoiceAllocator(voices);
 
     }
 
