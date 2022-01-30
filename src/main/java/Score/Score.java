@@ -104,10 +104,6 @@ public class Score {
         return integer;
     }
 
-    public int getnSteps() {
-        return nSteps;
-    }
-
     public void setBottomFreq(int bottomFreq) {
         this.bottomFreq = bottomFreq;
     }
@@ -120,7 +116,7 @@ public class Score {
         this.score = score;
     }
 
-    public void setnSteps(int nSteps) {
+    public void setNSteps(int nSteps) {
         this.nSteps = nSteps;
     }
 

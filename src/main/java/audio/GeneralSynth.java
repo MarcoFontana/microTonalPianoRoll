@@ -15,24 +15,28 @@ import java.util.TreeMap;
 public class GeneralSynth {
 
     private static final int MAX_VOICES = 16;
+    private static final double STARTUP_DELAY = 0.2;
     private final Score scoreToPlay;
     private Synthesizer synth;
     private LineOut out;
     private VoiceAllocator allocator;
     private String selectedInstrument;
     private double playTime;
+    private double accDelay;
 
 
     public GeneralSynth(Score scoreToPlay, String selectedInstrument) {
         this.scoreToPlay = scoreToPlay;
         this.playTime = 0;
         this.selectedInstrument = selectedInstrument;
+        accDelay = 0;
         initSynth();
     }
 
     public GeneralSynth(Score scoreToPlay, double playTime) {
         this.scoreToPlay = scoreToPlay;
         this.playTime = playTime;
+        accDelay = 0;
         initSynth();
     }
 
@@ -45,17 +49,22 @@ public class GeneralSynth {
         }
         double timeNow = synth.getCurrentTime();
 
-        TimeStamp startTime = new TimeStamp(timeNow + 0.1);
-
-        out.start(startTime);
+        TimeStamp startTime = new TimeStamp(timeNow + STARTUP_DELAY);
 
         double stopTime = 0;
 
         try {
-            stopTime = queueScore(timeNow + 0.1, nextIndex);
+            if (scoreToPlay.getChordStart(scoreToPlay.length()) - playTime <= 0) {
+                stopTime = queueScore(timeNow + STARTUP_DELAY, scoreToPlay.length());
+            }
+            else {
+                stopTime = queueScore(timeNow + STARTUP_DELAY, nextIndex);
+            }
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+
+        out.start(startTime);
 
         return stopTime;
 
@@ -71,8 +80,8 @@ public class GeneralSynth {
             if (scoreTree.containsKey(relTime)) {
 
                 Chord chord = scoreTree.get(relTime);
-                double sTime = scoreToPlay.getChordStart(relTime) - playTime;
-                TimeStamp chordStartTime = new TimeStamp(timeNow + sTime);
+                double sTime = scoreToPlay.getChordStart(relTime) - (playTime - accDelay);
+                TimeStamp chordStartTime = sTime < 0 ? new TimeStamp(timeNow) : new TimeStamp(timeNow + sTime);
 
                 for (Note note : chord.getChord()) {
 
@@ -89,7 +98,15 @@ public class GeneralSynth {
 
                     allocator.noteOn(noteNumber, freq, 0.6, chordStartTime);
                     allocator.noteOff(noteNumber,chordStartTime.makeRelative(duration));
-                    currPlayTime = sTime + duration;
+
+                    if (sTime < 0) {
+                        currPlayTime = duration;
+                    }
+                    else {
+                        if (currPlayTime < sTime + duration) {
+                            currPlayTime = sTime + duration;
+                        }
+                    }
 
 
                 }
@@ -119,6 +136,7 @@ public class GeneralSynth {
     public void stop() {
         out.stop();
         playTime = synth.getCurrentTime();
+        accDelay += STARTUP_DELAY;
         synth.stop();
     }
 

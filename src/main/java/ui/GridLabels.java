@@ -7,11 +7,13 @@ public class GridLabels extends JLabel {
 
     private final int nCells;
     private final boolean even;
+    private final boolean isLast;
 
-    public GridLabels(int nCells, boolean even) {
+    public GridLabels(int nCells, boolean even, boolean isLast) {
         super();
         this.nCells = nCells;
         this.even = even;
+        this.isLast = isLast;
     }
 
     @Override
@@ -44,7 +46,9 @@ public class GridLabels extends JLabel {
             g2d.drawLine((cellLength * i), h, (cellLength * i), 0);
         }
         g2d.drawLine(0, 0, w,0);
-
+        if (isLast){
+            g2d.drawLine(0, h - 1, w, h - 1);
+        }
         super.paintComponent(g);
     }
 }
